@@ -5,11 +5,22 @@
 #include <cstring>
 using namespace std;
 
+void print_usage();
+bool is_integer(const char *s);
 void run_server(int port);
 void run_client(int port);
 
 int main(int argc, const char **argv)
 {
+    if (argc != 3
+        || strcmp(argv[1], "server") != 0 && strcmp(argv[1], "client") != 0
+        || !is_integer(argv[2])
+        || is_integer(argv[2]) && atoi(argv[2]) < 0)
+    {
+        print_usage();
+        return 1;
+    }
+
     if (strcmp(argv[1], "server") == 0)
     {
         printf("Running server\n");
@@ -22,6 +33,25 @@ int main(int argc, const char **argv)
     }
     
     return 0;
+}
+
+void print_usage()
+{
+    printf("./cs <client/server> <port-no>\n");
+}
+
+bool is_integer(const char *s)
+{
+    if(strlen(s) == 0 || ((!isdigit(s[0]))
+        && (s[0] != '-') && (s[0] != '+')))
+    {
+        return false;
+    }
+
+    char *p;
+    strtol(s, &p, 10);
+
+    return *p == 0;
 }
 
 void run_server(int port)
